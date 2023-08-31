@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -34,9 +34,6 @@ if (app.Environment.IsDevelopment())
     );
     app.UseCors("CorsPolicy");
 }
-
-
-
 
 
 app.MapGet("/getresult", async ([FromServices] IMediator mediator) =>
