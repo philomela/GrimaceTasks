@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.EntityTypeConfigurations;
 
-internal class TaskConfiguration : IEntityTypeConfiguration<Domain.Core.Task>
+internal class TaskConfiguration : IEntityTypeConfiguration<Domain.Core.Post>
 {
-    public void Configure(EntityTypeBuilder<Domain.Core.Task> builder)
+    public void Configure(EntityTypeBuilder<Domain.Core.Post> builder)
     {
         builder.HasKey(x => x.Id);
     }

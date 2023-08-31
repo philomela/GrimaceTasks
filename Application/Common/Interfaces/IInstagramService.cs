@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.Interfaces;
 
-public interface IInstagramService<T, K>
+public interface IInstagramService<T, K, P>
 {
-    Task<T> CheckPostAsync(List<K> participant);
+    Task<T> CheckPostAsync(K post, List<P> participant);
 }
