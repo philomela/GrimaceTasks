@@ -12,7 +12,7 @@ public record CreatePostsCommand : IRequest<Unit>
 
 public class CreatePostsCommandHandler : IRequestHandler<CreatePostsCommand, Unit>
 {
-    //Раскладываем в бд данные по постам.
+    //Идем в апи бота, забираем посты, раскладываем в бд данные по постам.
     public Task<Unit> Handle(CreatePostsCommand request, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();

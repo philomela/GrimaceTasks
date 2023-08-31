@@ -8,7 +8,7 @@ namespace Infrastructure;
 public class AppDbContext : DbContext, IAppDbContext
 {
     public DbSet<Participant> Participants { get; set; }
-    public DbSet<Domain.Core.Task> Tasks { get; set; }
+    public DbSet<Domain.Core.Post> Tasks { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) :
         base(options)
