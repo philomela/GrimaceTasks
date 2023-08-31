@@ -12,53 +12,14 @@ namespace Infrastructure.Services;
 
 public class InstagramService : IInstagramService<Dictionary<string, List<string>>, Post, Participant>
 {
-    private readonly IConfiguration _configuration;
+    private readonly IInstagramConnectionFactory _instConnectionFactory;
 
-    public InstagramService(IConfiguration configuration)
-        => _configuration = configuration;
+    public InstagramService(IInstagramConnectionFactory instConnectionFactory)
+        => _instConnectionFactory = instConnectionFactory;
     async public Task<Dictionary<string, List<string>>> CheckPostAsync(Post post, List<Participant> participants)
     {
-        var delay = RequestDelay.FromSeconds(0, 20);
 
-        var userSession = new UserSessionData
-        {
-            UserName = _configuration.GetSection("Credentials").GetSection("InstagramLogin").Value,
-            Password = _configuration.GetSection("Credentials").GetSection("InstagramPassword").Value
-        };
-
-        WebProxy wp = new WebProxy()
-        {
-            Address = new Uri($"http://83.168.113.242:5175"),
-            Credentials = new NetworkCredential("user126047", "yixrhf"),
-
-        };
-        var httpClientHandler = new HttpClientHandler()
-        {
-            Proxy = wp,
-            UseProxy = true
-
-        };
-        var _instaApi = InstaApiBuilder.CreateBuilder()
-            .UseHttpClientHandler(httpClientHandler)
-               .SetUser(userSession)
-               .UseLogger(new DebugLogger(InstagramApiSharp.Logger.LogLevel.Exceptions)) // use logger for requests and debug messages
-               .SetRequestDelay(delay)
-               .Build();
-
-        if (!_instaApi.IsUserAuthenticated)
-        {
-            // login
-            Console.WriteLine($"Logging in as {userSession.UserName}");
-            delay.Disable();
-            var logInResult = await _instaApi.LoginAsync();
-            delay.Enable();
-            if (!logInResult.Succeeded)
-            {
-                Console.WriteLine($"Unable to login: {logInResult.Info.Message}");
-            }
-        }
-
-
+        var _instaApi = await _instConnectionFactory.GetOpenConnection();
 
         //Можно удалить сдесь лайки со своей страницы var result = _instaApi.FeedProcessor.GetLikedFeedAsync(PaginationParameters.MaxPagesToLoad(5)).Result.Value[0].PreviewComments;
         var mediaId = await _instaApi.MediaProcessor.GetMediaIdFromUrlAsync(new Uri(post.Url));
