@@ -5,11 +5,16 @@ using Application.Posts.Commands;
 using Application.Posts.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Application.Common.Interfaces;
+using Hangfire;
+using Infrastructure.Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -33,6 +38,7 @@ if (app.Environment.IsDevelopment())
     }
     );
     app.UseCors("CorsPolicy");
+    app.UseHangfireDashboard("/dashboard");
 }
 
 
@@ -45,5 +51,7 @@ app.MapGet("/getresult", async ([FromServices] IMediator mediator) =>
 
     return checkResults;
 });
+
+RecurringJob.AddOrUpdate<IScheduledTasks>("CheckTasks", x => x.ExecuteTaskOnSchedule(), "0 * * * *");
 
 app.Run();
