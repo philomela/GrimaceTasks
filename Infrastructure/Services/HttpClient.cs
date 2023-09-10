@@ -1,19 +1,17 @@
 ﻿using Application.Common.Interfaces;
 using Flurl.Http;
-using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Services;
 
-public class HttpClient : IHttpClient<string, string>
+public class HttpClient<T, K, P> : IHttpClient<T, K, P>
 {
-    private readonly IConfiguration _configuration;
+    public async Task<T> GetAsync(string url, CancellationToken token)
+    {
+        var result = await url.GetStringAsync(token);
+        return JsonConvert.DeserializeObject<T>(result);
+    }
 
-    public HttpClient(IConfiguration configuration) 
-        => _configuration = configuration;
-
-    public async Task<string> GetAsync(CancellationToken token) 
-        => await $"{_configuration["ExternalAddresses:ApiBot"]}".GetStringAsync(token);
-        
-    public async Task<string> PostAsync(string data, CancellationToken token) 
-        => await $"{_configuration["ExternalAddresses:ApiBot"]}".PostStringAsync(data).ReceiveString();
+    public async Task<P> PostAsync(string url, K data, CancellationToken token)
+        => JsonConvert.DeserializeObject<P>(await url.PostJsonAsync(JsonConvert.SerializeObject(data)).ReceiveString());
 }

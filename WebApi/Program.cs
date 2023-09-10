@@ -7,13 +7,10 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Common.Interfaces;
 using Hangfire;
-using Infrastructure.Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-
+builder.Services.AddApplication();
 
 
 builder.Services.AddEndpointsApiExplorer();

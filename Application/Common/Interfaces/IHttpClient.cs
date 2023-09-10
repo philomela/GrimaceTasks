@@ -1,8 +1,8 @@
 ﻿namespace Application.Common.Interfaces;
 
-public interface IHttpClient<T, K>
+public interface IHttpClient<T, K, P>
 {
-    Task<T> GetAsync(CancellationToken token);
+    Task<T> GetAsync(string url, CancellationToken token);
 
-    Task<T> PostAsync(K data, CancellationToken token);
+    Task<P> PostAsync(string url, K data, CancellationToken token);
 }

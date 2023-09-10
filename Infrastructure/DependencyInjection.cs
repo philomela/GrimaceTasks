@@ -11,6 +11,8 @@ using System.Net;
 using Hangfire;
 using Hangfire.SqlServer;
 using Infrastructure.Hangfire;
+using Microsoft.EntityFrameworkCore;
+using Domain.Interfaces;
 
 namespace Infrastructure;
 
@@ -21,16 +23,12 @@ public static class DependencyInjection
 
         var connectionString = configuration["DbConnection"];
 
-        //services.AddDbContext<AdminDbContext>(options =>
-        //{
-        //    options.UseSqlServer(connectionString);
-        //});
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseSqlServer(connectionString);
+        });
 
-        //services.AddScoped<IAdminDbContext>(provider => provider.GetService<AdminDbContext>());
-        //services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>(provider
-        //    => new SqlConnectionFactory(connectionString));
-
-
+        services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>());
 
         services.AddSingleton<IInstaApi>(provider =>
         {
@@ -74,11 +72,12 @@ public static class DependencyInjection
         services.AddSingleton<IInstagramConnectionFactory, InstagramConnectionFactory>();
         
         services.AddSingleton<IInstagramService<Dictionary<string, List<string>>, Post, Participant>, InstagramService>();
-        
+
+        services.AddTransient(typeof(IHttpClient<,,>), typeof(HttpClient<,,>));
+
         services.AddScoped<IScheduledTasks, ScheduledCheckPostsJob>();
 
         services.AddHangfire(configuration => configuration
-       .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
        .UseSimpleAssemblyNameTypeSerializer()
        .UseRecommendedSerializerSettings()
        .UseSqlServerStorage(connectionString, new SqlServerStorageOptions

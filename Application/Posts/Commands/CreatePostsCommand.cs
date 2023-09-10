@@ -1,28 +1,36 @@
-﻿using Domain.Core.Dicitionarys;
+﻿using Application.Common.Interfaces;
+using Application.Common.RestApi;
+using Domain.Core;
+using Domain.Interfaces;
 using MediatR;
-using System.Net;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.Posts.Commands;
 
+[RestApi]
 public record CreatePostsCommand : IRequest<Unit>
 {
-    public long Id { get; set; }
-
-    public int Points { get; set; }
-
-    public string Url { get; set; }
-
-    public SocialNetworks SocialNetwork { get; set; }
+    public List<Post> Posts { get; set; }
 }
 
 public class CreatePostsCommandHandler : IRequestHandler<CreatePostsCommand, Unit>
 {
-    //Идем в апи бота, забираем посты, раскладываем в бд данные по постам.
+    private readonly IAppDbContext _appDbContext;
+    private readonly IHttpClient<List<Post>, string, string> _httpClient;
+    private readonly IConfiguration _configuration;
 
-    
+    public CreatePostsCommandHandler(
+        IAppDbContext appDbContext, 
+        IHttpClient<List<Post>, string, string> httpClient, 
+        IConfiguration configuration) 
+        => (_appDbContext, _httpClient, _configuration) = (appDbContext, httpClient, configuration); 
 
-    public Task<Unit> Handle(CreatePostsCommand request, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+    public async Task<Unit> Handle(CreatePostsCommand request, CancellationToken cancellationToken)
+    {      
+        await _appDbContext.Posts.AddRangeAsync(request.Posts, cancellationToken);
+
+        await _appDbContext.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
     }
 }
