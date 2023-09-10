@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using Application.Common.Behaviors;
+using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -8,6 +10,14 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        return services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+        
+        services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
+            cfg.AddRequestPreProcessor(typeof(IRequestPreProcessor<>), typeof(RestApiPreProcessor<>));
+            //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+
+        });
+        //services.AddTransient(typeof(IRequestPreProcessor<>), typeof(RestApiPreProcessor<>));
+        //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
+        return services;
     }
 }

@@ -8,7 +8,7 @@ namespace Infrastructure;
 public class AppDbContext : DbContext, IAppDbContext
 {
     public DbSet<Participant> Participants { get; set; }
-    public DbSet<Domain.Core.Post> Tasks { get; set; }
+    public DbSet<Domain.Core.Post> Posts { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) :
         base(options)
@@ -17,7 +17,7 @@ public class AppDbContext : DbContext, IAppDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ParticipantConfiguration());
-        modelBuilder.ApplyConfiguration(new TaskConfiguration());
+        modelBuilder.ApplyConfiguration(new PostConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 

@@ -8,6 +8,11 @@ using InstagramApiSharp.Logger;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
+using Hangfire;
+using Hangfire.SqlServer;
+using Infrastructure.Hangfire;
+using Microsoft.EntityFrameworkCore;
+using Domain.Interfaces;
 
 namespace Infrastructure;
 
@@ -16,18 +21,14 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
 
-        //var connectionString = config["DbConnection"];
+        var connectionString = configuration["DbConnection"];
 
-        //services.AddDbContext<AdminDbContext>(options =>
-        //{
-        //    options.UseSqlServer(connectionString);
-        //});
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseSqlServer(connectionString);
+        });
 
-        //services.AddScoped<IAdminDbContext>(provider => provider.GetService<AdminDbContext>());
-        //services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>(provider
-        //    => new SqlConnectionFactory(connectionString));
-
-
+        services.AddScoped<IAppDbContext>(provider => provider.GetService<AppDbContext>());
 
         services.AddSingleton<IInstaApi>(provider =>
         {
@@ -68,8 +69,26 @@ public static class DependencyInjection
         });
 
 
-        services.AddScoped<IInstagramConnectionFactory, InstagramConnectionFactory>();
-        services.AddTransient<IInstagramService<Dictionary<string, List<string>>, Post, Participant>, InstagramService>();
+        services.AddSingleton<IInstagramConnectionFactory, InstagramConnectionFactory>();
+        
+        services.AddSingleton<IInstagramService<Dictionary<string, List<string>>, Post, Participant>, InstagramService>();
+
+        services.AddTransient(typeof(IHttpClient<,,>), typeof(HttpClient<,,>));
+
+        services.AddScoped<IScheduledTasks, ScheduledCheckPostsJob>();
+
+        services.AddHangfire(configuration => configuration
+       .UseSimpleAssemblyNameTypeSerializer()
+       .UseRecommendedSerializerSettings()
+       .UseSqlServerStorage(connectionString, new SqlServerStorageOptions
+       {
+           CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+           SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+           QueuePollInterval = TimeSpan.Zero,
+           UseRecommendedIsolationLevel = true,
+           DisableGlobalLocks = true
+       }));
+        services.AddHangfireServer();
 
         return services;
     }
