@@ -35,24 +35,26 @@ CREATE TABLE Grimace.SocialNetworks (
 )
 GO
 
-/*Tasks table*/
-IF NOT EXISTS (SELECT 1 FROM sys.all_objects WHERE [name] = 'Tasks')
-CREATE TABLE Grimace.Tasks (
-	[Id] BIGINT PRIMARY KEY IDENTITY,
+/*Posts table*/
+IF NOT EXISTS (SELECT 1 FROM sys.all_objects WHERE [name] = 'Posts')
+CREATE TABLE Grimace.Posts (
+	[Id] BIGINT PRIMARY KEY,
 	[Points] INT,
 	[Url] NVARCHAR(500) NOT NULL,
 	[CreateDate] DATETIME2 NOT NULL,
-	[ExpireDate] DATETIME2 NOT NULL,
-	[SocialNetworkId] BIGINT UNIQUE NOT NULL FOREIGN KEY REFERENCES Grimace.SocialNetworks(Id)
+	[UpdatedAt] DATETIME2 NOT NULL,
+	[Expires] DATETIME2 NOT NULL,
+	[SocialNetworkId] BIGINT NOT NULL FOREIGN KEY REFERENCES Grimace.SocialNetworks(Id)
 )
 GO
 
 /*Participants table*/
 IF NOT EXISTS (SELECT 1 FROM sys.all_objects WHERE [name] = 'Participants')
 CREATE TABLE Grimace.Participants (
-	[Id] BIGINT PRIMARY KEY IDENTITY,
+	[Id] BIGINT PRIMARY KEY,
 	[UserName] NVARCHAR(300) NOT NULL,
-	[SocialNetworkId] BIGINT UNIQUE NOT NULL FOREIGN KEY REFERENCES Grimace.SocialNetworks(Id)
+	[ParentId] BIGINT NOT NULL,
+	[SocialNetworkId] BIGINT NOT NULL FOREIGN KEY REFERENCES Grimace.SocialNetworks(Id)
 )
 GO
 

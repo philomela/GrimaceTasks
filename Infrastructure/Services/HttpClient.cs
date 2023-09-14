@@ -9,7 +9,7 @@ public class HttpClient<T, K, P> : IHttpClient<T, K, P>
     public async Task<T> GetAsync(string url, CancellationToken token)
     {
         var result = await url.GetStringAsync(token);
-        return JsonConvert.DeserializeObject<T>(result);
+        return (JsonConvert.DeserializeObject<T>(result));
     }
 
     public async Task<P> PostAsync(string url, K data, CancellationToken token)

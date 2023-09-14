@@ -12,7 +12,8 @@ public static class DependencyInjection
     {
         
         services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
-            cfg.AddRequestPreProcessor(typeof(IRequestPreProcessor<>), typeof(RestApiPreProcessor<>));
+            cfg.AddRequestPreProcessor(typeof(IRequestPreProcessor<>), typeof(PostsRestApiPreProcessor<>));
+            cfg.AddRequestPreProcessor(typeof(IRequestPreProcessor<>), typeof(ParticipantsRestApiPreProcessor<>));
             //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(RequestPreProcessorBehavior<,>));
 
         });
