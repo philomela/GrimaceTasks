@@ -59,8 +59,8 @@ CREATE TABLE Grimace.Participants (
 GO
 
 /*TasksResults table*/
-IF NOT EXISTS (SELECT 1 FROM sys.all_objects WHERE [name] = 'TasksResults')
-CREATE TABLE Grimace.TasksResults (
+IF NOT EXISTS (SELECT 1 FROM sys.all_objects WHERE [name] = 'CheckResults')
+CREATE TABLE Grimace.CheckResults (
 	[Id] BIGINT PRIMARY KEY IDENTITY,
 	[UserId] BIGINT,
 	[TaskId] BIGINT,

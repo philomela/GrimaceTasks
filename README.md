@@ -10,11 +10,23 @@
 
 ### Architecture
 
-##### <a name="Parag"></a>	Clean architecture
+##### Clean architecture
 
 <img src="/Docs/OnionArchitecture.png" width="1100">
 
 Clean Architecture is a software design concept that enforces separation of concerns and respects the preservation of SOLID for ease of maintenance, scalability, and cost reduction depending on platformers or libraries.
+
+##### Sequence diagram
+
+<img src="/Docs/SequenceDiagram.png" width="1100">
+
+<ul>
+  <li>Step 1. We receive data on tasks and accounts from the bot's API, using get requests</li>
+  <li>Step 2. We save or update the data based on the received data in the database</li>
+  <li>Step 3. Parse data for Instagram and check the completion of tasks using the Instagram api</li>
+  <li>Step 4. Save the parsing results to the database</li>
+  <li>Step 5. Send the results back to the web api of the telegram bot</li>
+</ul>
 
 ### Sponsors
 GrimaceCoin: <a href="https://grimacedoge.com">WebSite</a> 
