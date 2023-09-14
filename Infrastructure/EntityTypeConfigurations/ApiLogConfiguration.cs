@@ -4,11 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.EntityTypeConfigurations;
 
-internal class ParticipantConfiguration : IEntityTypeConfiguration<Participant>
+internal class ApiLogConfiguration : IEntityTypeConfiguration<ApiLog>
 {
-    public void Configure(EntityTypeBuilder<Participant> builder)
+    public void Configure(EntityTypeBuilder<ApiLog> builder)
     {
-        builder.ToTable("Participants", "Grimace");
         builder.HasKey(x => x.Id);
     }
 }

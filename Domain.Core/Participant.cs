@@ -2,11 +2,20 @@
 
 namespace Domain.Core;
 
-public record Participant
+public partial record Participant
 {
-    public long Id { get; set; }
+    public long Id { get; set; } //Id в телеграмме
 
-    public SocialNetworks SocialNetworks { get; set; }
+    //public string SocialNetworks { get; set; } //Использовать
 
-    public string UserName { get; set; }
+    public string UserName { get; set; } //Имя пользователя в соцсети.
+
+    public long ParentId { get; set; }
+
+    //public UserParticipant User { get; set; }
+
+    //public record UserParticipant
+    //{
+    //    public long Id { get; set; }
+    //}
 }
