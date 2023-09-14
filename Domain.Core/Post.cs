@@ -10,6 +10,12 @@ namespace Domain.Core
 
         public string Url { get; set; }
 
-        public SocialNetworks SocialNetwork { get; set; }
+        public DateTime UpdatedAt { get; set; }
+
+        public DateTime CreateDate { get; set; }
+
+        public DateTime Expires { get; set; }
+
+        //public SocialNetworks SocialNetwork { get; set; }
     }
 }

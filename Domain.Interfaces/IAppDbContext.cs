@@ -9,5 +9,7 @@ public interface IAppDbContext
 
     public DbSet<Domain.Core.Post> Posts { get; set; }
 
+    public DbSet<ApiLog> ApiLogs { get; set; }
+
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

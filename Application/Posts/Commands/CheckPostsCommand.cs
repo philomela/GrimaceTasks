@@ -7,7 +7,7 @@ namespace Application.Posts.Commands;
 
 public record CheckPostsCommand : IRequest<Dictionary<string, List<string>>>
 {
-    public List<Post> ActivePosts { get; set; }
+    public List<Post> Posts { get; set; }
 
     public List<Participant> Participants { get; set; }
 }
@@ -22,6 +22,6 @@ public class CheckPostsCommandHandler : IRequestHandler<CheckPostsCommand, Dicti
     //Результат пишем в таблицу проверненых, так как два раза на один пост юзер не может выполнить задание.???
     public async Task<Dictionary<string, List<string>>> Handle(CheckPostsCommand request, CancellationToken cancellationToken)
     {
-       return await _instagramService.CheckPostAsync(request.ActivePosts.FirstOrDefault(), request.Participants);
+       return await _instagramService.CheckPostAsync(request.Posts.FirstOrDefault(), request.Participants);
     }
 }

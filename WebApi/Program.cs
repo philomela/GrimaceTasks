@@ -7,10 +7,18 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Common.Interfaces;
 using Hangfire;
+using Application.Common.Mappings;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
+builder.Services.AddAutoMapper(cfg
+    =>
+{
+    cfg.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
+    cfg.AddProfile(new AssemblyMappingProfile(typeof(IMapWith<>).Assembly));
+});
 
 
 builder.Services.AddEndpointsApiExplorer();
@@ -44,7 +52,7 @@ app.MapGet("/getresult", async ([FromServices] IMediator mediator) =>
     var posts = await mediator.Send(new GetActivePostsQuery());
     var participants = await mediator.Send(new GetParticipantsBySocialNetworkQuery());
 
-    var checkResults = await mediator.Send(new CheckPostsCommand() { ActivePosts = posts, Participants = participants});
+    var checkResults = await mediator.Send(new CheckPostsCommand() { Posts = posts, Participants = participants});
 
     return checkResults;
 });
