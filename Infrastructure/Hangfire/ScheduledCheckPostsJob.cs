@@ -24,7 +24,7 @@ public class ScheduledCheckPostsJob : IScheduledTasks
         var instaPosts = await _mediator.Send(new GetActivePostsQuery()); //Выбрать нужных по переданному socialNetworkName
         var instaParticipants = await _mediator.Send(new GetParticipantsBySocialNetworkQuery()); //Выбрать нужных по переданному socialNetworkName
 
-        var checkResults = await _mediator.Send(new CheckPostsCommand() { Posts = posts, Participants = participants });
+        var checkResults = await _mediator.Send(new CheckPostsCommand() { Posts = instaPosts, Participants = instaParticipants });
 
         await _mediator.Send(new CreateCheckResultsCommand());
     }

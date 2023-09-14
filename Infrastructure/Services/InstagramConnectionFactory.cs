@@ -16,7 +16,7 @@ internal class InstagramConnectionFactory : IInstagramConnectionFactory
         {
             // login
 
-            var logInResult = await _instaApi.LoginAsync();
+            var logInResult = await _instaApi.LoginAsync(); //Если прокси недоступна и нас забанили, возвращается paremetr s
 
             if (!logInResult.Succeeded)
             {
