@@ -32,3 +32,6 @@ Clean Architecture is a software design concept that enforces separation of conc
 GrimaceCoin: <a href="https://grimacedoge.com">WebSite</a> 
 <a href="https://t.me/grimace">Telegram</a> 
 <a href="https://instagram.com/grimace_doge_coin">Instagram</a> 
+
+### Thanks
+[@Ramtinak](https://github.com/ramtinak/) for Private Instagram API Sharp library

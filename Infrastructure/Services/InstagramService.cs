@@ -4,29 +4,35 @@ using InstagramApiSharp;
 
 namespace Infrastructure.Services;
 
-public class InstagramService : IInstagramService<Dictionary<string, List<string>>, Post, Participant>
+public class InstagramService : IInstagramService<Dictionary<long, List<Participant>>, Post, Participant>
 {
     private readonly IInstagramConnectionFactory _instConnectionFactory;
 
     public InstagramService(IInstagramConnectionFactory instConnectionFactory)
         => _instConnectionFactory = instConnectionFactory;
-    async public Task<Dictionary<string, List<string>>> CheckPostAsync(Post post, List<Participant> participants)
+    public async Task<Dictionary<long, List<Participant>>> CheckPostsAsync(List<Post> posts, List<Participant> participants)
     {
         var _instaApi = await _instConnectionFactory.GetOpenConnection();
 
-        var mediaId = await _instaApi.MediaProcessor.GetMediaIdFromUrlAsync(new Uri(post.Url));
-        var resp = await _instaApi.MediaProcessor.GetMediaByIdAsync(mediaId.Value);
-        var comments = await _instaApi.CommentProcessor.GetMediaCommentsAsync(mediaId.Value, PaginationParameters.MaxPagesToLoad(50));
-        var likes = await _instaApi.MediaProcessor.GetMediaLikersAsync(mediaId.Value);
+        var checkResults = new Dictionary<long, List<Participant>>();
 
-        var trueParticipants = participants
-            .Where(p => likes.Value.Select(l => l.UserName).Contains(p.UserName))
-            .Intersect(participants.Where(p => comments.Value.Comments.Select(c => c.User.UserName).Contains(p.UserName)))
-            .ToList();
-
-        return new Dictionary<string, List<string>>
+        foreach (var post in posts)
         {
-            {post.Url, trueParticipants.Select(p => $"{p.UserName} points: {post.Points}").ToList() },
-        };
+            var mediaId = await _instaApi.MediaProcessor.GetMediaIdFromUrlAsync(new Uri(post.Url));
+            var resp = await _instaApi.MediaProcessor.GetMediaByIdAsync(mediaId.Value);
+            var comments = await _instaApi.CommentProcessor.GetMediaCommentsAsync(mediaId.Value, PaginationParameters.MaxPagesToLoad(50));
+            var likes = await _instaApi.MediaProcessor.GetMediaLikersAsync(mediaId.Value);
+
+            var trueParticipants = participants
+                .Where(p => likes.Value.Select(l => l.UserName).Contains(p.UserName))
+                .Intersect(participants.Where(p => comments.Value.Comments.Select(c => c.User.UserName).Contains(p.UserName)))
+                .ToList();
+
+            checkResults.Add(post.Id, trueParticipants);
+
+            //await Task.Delay(TimeSpan.FromMinutes(3));
+        }
+
+        return checkResults;
     }
 }
