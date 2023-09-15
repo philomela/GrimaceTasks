@@ -2,5 +2,5 @@
 
 public interface IInstagramService<T, K, P>
 {
-    Task<T> CheckPostAsync(K post, List<P> participant);
+    Task<T> CheckPostsAsync(List<K> posts, List<P> participants);
 }

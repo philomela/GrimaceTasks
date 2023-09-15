@@ -71,7 +71,7 @@ public static class DependencyInjection
 
         services.AddSingleton<IInstagramConnectionFactory, InstagramConnectionFactory>();
         
-        services.AddSingleton<IInstagramService<Dictionary<string, List<string>>, Post, Participant>, InstagramService>();
+        services.AddSingleton<IInstagramService<Dictionary<long, List<Participant>>, Post, Participant>, InstagramService>();
 
         services.AddTransient(typeof(IHttpClient<,,>), typeof(HttpClient<,,>));
 

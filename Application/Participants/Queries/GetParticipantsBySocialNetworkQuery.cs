@@ -18,8 +18,7 @@ public class GetParticipantsBySocialNetworkQueryHandler : IRequestHandler<GetPar
         => _appDbContext = appDbContext; 
 
     public async Task<List<Participant>> Handle(GetParticipantsBySocialNetworkQuery request, CancellationToken cancellationToken)
-    {
-        return _appDbContext.Participants
-            .ToList();
-    }
+        => _appDbContext.Participants
+        .ToList();
+
 }
