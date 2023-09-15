@@ -15,7 +15,7 @@ public class ScheduledCheckPostsJob : IScheduledTasks
     public ScheduledCheckPostsJob(IMediator mediator) 
         => _mediator = mediator;
 
-    [AutomaticRetry(Attempts = 1)]
+    [AutomaticRetry(Attempts = 2)]
     public async Task ExecuteTaskOnSchedule()
     {
         await _mediator.Send(new CreateOrUpdatePostsCommand());

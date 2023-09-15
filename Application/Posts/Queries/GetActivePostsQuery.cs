@@ -17,9 +17,7 @@ public class GetActivePostsQueryHandler : IRequestHandler<GetActivePostsQuery, L
         => _appDbContext = appDbContext; 
 
     public async Task<List<Post>> Handle(GetActivePostsQuery request, CancellationToken cancellationToken)
-    {
-        return _appDbContext.Posts
-            .Where(p => p.Expires >= DateTime.Now)
-            .ToList();
-    }
+        => _appDbContext.Posts
+        .Where(p => p.Expires >= DateTime.Now)
+        .ToList();
 }
