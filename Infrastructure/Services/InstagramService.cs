@@ -19,9 +19,15 @@ public class InstagramService : IInstagramService<Dictionary<long, List<Particip
         foreach (var post in posts)
         {
             var mediaId = await _instaApi.MediaProcessor.GetMediaIdFromUrlAsync(new Uri(post.Url));
+            var mediaShortCode = _instaApi.MediaProcessor.GetMediaShortCodeFromUrlAsync(new Uri(post.Url));
+
             var resp = await _instaApi.MediaProcessor.GetMediaByIdAsync(mediaId.Value);
+
             var comments = await _instaApi.CommentProcessor.GetMediaCommentsAsync(mediaId.Value, PaginationParameters.MaxPagesToLoad(50));
-            var likes = await _instaApi.MediaProcessor.GetMediaLikersAsync(mediaId.Value);
+
+            await Task.Delay(TimeSpan.FromMinutes(1));
+
+            var likes = await _instaApi.MediaProcessor.GetMediaLikersAsync(mediaShortCode.Value, PaginationParameters.MaxPagesToLoad(10));
 
             var trueParticipants = participants
                 .Where(p => likes.Value.Select(l => l.UserName).Contains(p.UserName))
@@ -30,7 +36,7 @@ public class InstagramService : IInstagramService<Dictionary<long, List<Particip
 
             checkResults.Add(post.Id, trueParticipants);
 
-            //await Task.Delay(TimeSpan.FromMinutes(3));
+            await Task.Delay(TimeSpan.FromMinutes(3));
         }
 
         return checkResults;
