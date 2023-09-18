@@ -28,6 +28,10 @@ Clean Architecture is a software design concept that enforces separation of conc
   <li>Step 5. Send the results back to the web api of the telegram bot</li>
 </ul>
 
+##### ERD DataBase
+
+<img src="/Docs/DbERD.png" width="1100">
+
 ### Sponsors
 GrimaceCoin: <a href="https://grimacedoge.com">WebSite</a> 
 <a href="https://t.me/grimace">Telegram</a> 
