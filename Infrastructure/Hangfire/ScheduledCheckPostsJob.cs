@@ -12,7 +12,7 @@ namespace Infrastructure.Hangfire;
 public class ScheduledCheckPostsJob : IScheduledTasks
 {
     private readonly IMediator _mediator;
-    public ScheduledCheckPostsJob(IMediator mediator) 
+    public ScheduledCheckPostsJob(IMediator mediator)
         => _mediator = mediator;
 
     [AutomaticRetry(Attempts = 2)]
@@ -24,7 +24,11 @@ public class ScheduledCheckPostsJob : IScheduledTasks
         var instaPosts = await _mediator.Send(new GetActivePostsQuery()); //Выбрать нужных по переданному socialNetworkName
         var instaParticipants = await _mediator.Send(new GetParticipantsBySocialNetworkQuery()); //Выбрать нужных по переданному socialNetworkName
 
-        var checkResults = await _mediator.Send(new CheckPostsCommand() { Posts = instaPosts, Participants = instaParticipants });
+        var checkResults = await _mediator.Send(new CheckPostsCommand()
+        {
+            Posts = instaPosts,
+            Participants = instaParticipants
+        });
 
         await _mediator.Send(new CreateCheckResultsCommand());
     }
