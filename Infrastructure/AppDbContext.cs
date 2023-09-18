@@ -10,7 +10,7 @@ public class AppDbContext : DbContext, IAppDbContext
     public DbSet<Participant> Participants { get; set; }
     public DbSet<Domain.Core.Post> Posts { get; set; }
 
-    public DbSet<ApiLog> ApiLogs { get; set; }
+    public DbSet<CheckResults> CheckResults { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) :
         base(options)
@@ -20,7 +20,7 @@ public class AppDbContext : DbContext, IAppDbContext
     {
         modelBuilder.ApplyConfiguration(new ParticipantConfiguration());
         modelBuilder.ApplyConfiguration(new PostConfiguration());
-        //modelBuilder.ApplyConfiguration(new ApiLogConfiguration());
+        modelBuilder.ApplyConfiguration(new CheckResultsConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 

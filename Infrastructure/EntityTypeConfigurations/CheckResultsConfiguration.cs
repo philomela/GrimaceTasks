@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.EntityTypeConfigurations;
 
-internal class ApiLogConfiguration : IEntityTypeConfiguration<ApiLog>
+internal class CheckResultsConfiguration : IEntityTypeConfiguration<CheckResults>
 {
-    public void Configure(EntityTypeBuilder<ApiLog> builder)
+    public void Configure(EntityTypeBuilder<CheckResults> builder)
     {
+        builder.ToTable("CheckResults", "Grimace");
         builder.HasKey(x => x.Id);
     }
 }
